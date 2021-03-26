@@ -1,4 +1,7 @@
-redisConfig:
-    Addr: "localhost:6379"
-    Password: ""
-    DB: 0
+redis_config:
+    addr: "localhost:6379"
+    password: ""
+    db: 0
+log_config:
+    path: "./serverLog.log"
+    level: "DebugLevel"

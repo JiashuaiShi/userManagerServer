@@ -1,0 +1,2 @@
+{"level":"debug","logPath":"./serverLog.json","msg":"log init sucess![]","time":"2021-03-26T15:44:39+08:00"}
+{"level":"error","msg":"redis config failed![]","redisConfPath":"./src/conf/config.yml","time":"2021-03-26T15:44:39+08:00"}

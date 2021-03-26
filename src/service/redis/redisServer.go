@@ -1,7 +1,6 @@
 package redis
 
 import (
-	"errors"
 	"github.com/go-redis/redis"
 	_ "gopkg.in/yaml.v2"
 	log "zego.com/userManageServer/src/logger"
@@ -23,20 +22,12 @@ func initClient(conf models.RedisConfig) (err error) {
 	client = redis.NewClient(&redis.Options{
 		Addr:     conf.Addr,     // redis地址
 		Password: conf.Password, // redis密码，没有则留空
-		DB:       conf.DB,       // 默认数据库，默认是0
+		DB:       conf.Db,       // 默认数据库，默认是0
 	})
 
-	//通过 *redis.client.Ping() 来检查是否成功连接到了redis服务器
+	// 通过 *redis.client.Ping() 来检查是否成功连接到了redis服务器
 	// Output: PONG <nil>
 	_, err = client.Ping().Result()
-	if err != nil {
-		log.Error(log.Field{
-			"address":  conf.Addr,
-			"password": conf.Password,
-			"DbNo.":    conf.DB,
-		},
-			"redis init failed!")
-	}
 	return
 }
 
@@ -57,7 +48,7 @@ func GetData(key string) (values []string, err error) {
 				"key": key,
 				"res": res,
 			},
-			"run GetData luaScript failed")
+			"run GetData luaScript failed, error:%+v", err)
 		return
 	}
 	values = append(values, res.(string))
@@ -91,10 +82,10 @@ func SetData(key string, value string, score int64) (err error) {
 			"member": member,
 			"value":  value,
 			"res":    res,
-		}, "SetData luaScript return false")
-		err = errors.New("SetData luaScript return false")
+		}, "SetData luaScript return false. error: %+v", err)
+		return err
 	}
-	return nil
+	return err
 }
 
 // 根据userId从redis读取全部数据
@@ -127,11 +118,11 @@ func GetAllData(minv int, maxv int) (values []string, total int32, err error) {
 	`)
 
 	result, err := luaScript.Run(client, []string{uidSet}, minv, maxv).Result()
-	if err != nil || result == nil{
+	if err != nil || result == nil {
 		log.Error(log.Field{
 			"minv": minv,
 			"maxv": maxv,
-		},"GetData failed")
+		}, "GetData failed. error:%+v", err)
 		return
 	}
 
@@ -160,11 +151,11 @@ func DelData(key string) (err error) {
 		return false
 	`)
 	res, err := luaScript.Run(client, []string{uidSet, key}).Result()
-	if err != nil || res == nil{
+	if err != nil || res == nil {
 		log.Error(log.Field{
-			"key":key,
+			"key": key,
 			"res": res,
-		},"DelData luaScript return false")
+		}, "DelData luaScript return false, error:%+v", err)
 		return
 	}
 

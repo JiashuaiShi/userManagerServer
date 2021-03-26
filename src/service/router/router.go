@@ -4,6 +4,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"time"
+	log "zego.com/userManageServer/src/logger"
 )
 
 func RunRouter() {
@@ -25,5 +26,7 @@ func RunRouter() {
 	routerGroup.GET("/get_userlist", getListHandle)
 	routerGroup.DELETE("/del_user/:id", deleteHandle)
 
+	// 端口可配置？
 	_ = router.Run(":9001")
+	log.Info(nil, "router run at port 9001")
 }

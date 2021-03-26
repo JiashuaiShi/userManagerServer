@@ -9,42 +9,56 @@
 package logger
 
 import (
-	"fmt"
-	//_ "errors"
+	"errors"
 	"github.com/sirupsen/logrus"
 	"os"
+	"zego.com/userManageServer/src/models"
 )
 
 var logger *logrus.Logger
 
 type Field = logrus.Fields
 
-func Init() {
+func Init(conf models.LogConfig) (err error) {
 	logger = logrus.New()
-
-	logger.WithFields(logrus.Fields{
-		"animal": "walrus",
-		"size":   10,
-	}).Info("A group of walrus emerges from the ocean")
-
-	file, err := os.OpenFile("logrus.log", os.O_CREATE|os.O_WRONLY, 0666)
-	if err == nil {
-		logger.SetFormatter(&logrus.JSONFormatter{})
-		logger.Out = file
-	} else {
-		fmt.Println("log init failed!")
-		return
+	// 设置级别
+	logger.SetLevel(models.LogLevelMap[conf.Level])
+	// 设置格式
+	logger.SetFormatter(&logrus.JSONFormatter{})
+	// 设置路径
+	if len(conf.Path) == 0{
+		logger.SetOutput(os.Stdout)
+		return err
+	}else {
+		if file, err := os.OpenFile(conf.Path, os.O_CREATE|os.O_WRONLY, 0666); err == nil {
+			logger.Out = file
+			return err
+		} else {
+			return errors.New("log conf failed")
+		}
 	}
 }
 
 func Info(fields Field, msg string, args ...interface{}) {
-	logger.WithFields(fields).Infof(msg, args)
+	if fields != nil {
+		logger.WithFields(fields).Infof(msg, args...)
+	} else {
+		logger.Infof(msg, args...)
+	}
 }
 
 func Error(fields Field, msg string, args ...interface{}) {
-	logger.WithFields(fields).Error(msg, args)
+	if fields != nil {
+		logger.WithFields(fields).Errorf(msg, args)
+	} else {
+		logger.Errorf(msg)
+	}
 }
 
 func Debug(fields logrus.Fields, msg string, args ...interface{}) {
-	logger.WithFields(fields).Debug(msg, args)
+	if fields != nil {
+		logger.WithFields(fields).Debug(msg, args)
+	} else {
+		logger.Debugf(msg, args...)
+	}
 }

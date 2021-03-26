@@ -24,7 +24,7 @@ func addHandle(context *gin.Context) {
 			"Nickname":  user.Nickname,
 			"RoleType":  user.RoleType,
 			"LoginTime": user.LoginTime,
-		}, "BindJSON failed")
+		}, "BindJSON failed, error:%+v", err)
 		return
 	}
 
@@ -37,7 +37,7 @@ func addHandle(context *gin.Context) {
 		"nickname:":   user.Nickname,
 		"role_type:":  user.RoleType,
 		"login_time:": user.LoginTime},
-		"原始数据")
+		"add usr raw data")
 
 	// 获取user_id 和 string类型的data
 	jsonData, err := json.Marshal(user)
@@ -48,7 +48,7 @@ func addHandle(context *gin.Context) {
 			"RoleType":  user.RoleType,
 			"LoginTime": user.LoginTime,
 		},
-			"json marshal failed!")
+			"json marshal failed! error%+v:", err)
 		return
 	}
 	log.Debug(log.Field{
@@ -65,7 +65,7 @@ func addHandle(context *gin.Context) {
 	if err := redis.SetData(user.UserId, string(jsonData), user.LoginTime); err != nil {
 		resp.Code = contextConf.ERROR.Code
 		resp.Message = contextConf.ERROR.Msg
-		log.Error(nil, "redis save data failed!")
+		log.Error(nil, "redis save data failed!, error:%+v", err)
 	} else {
 		resp.Code = contextConf.SUCCESS.Code
 		resp.Message = contextConf.SUCCESS.Msg
@@ -88,7 +88,7 @@ func getHandle(context *gin.Context) {
 		log.Error(log.Field{
 			"userInfo": userStr,
 		},
-			"get data from redis failed!")
+			"get data from redis failed! error:%+v", err)
 		resp.Code = contextConf.ERROR.Code
 		resp.Message = contextConf.ERROR.Msg
 		return
@@ -110,7 +110,7 @@ func getHandle(context *gin.Context) {
 				"RoleType":  user.RoleType,
 				"LoginTime": user.LoginTime,
 			},
-				"json unmarshal failed")
+				"json unmarshal failed. error:%+v", err)
 		}
 		users = append(users, user)
 	}
@@ -146,7 +146,7 @@ func getListHandle(context *gin.Context) {
 	if err != nil {
 		log.Error(log.Field{
 			"rawData": usersStr,
-		}, "redis return failed")
+		}, "redis return failed. error:%+v", err)
 
 		resp.Code = contextConf.ERROR.Code
 		resp.Message = contextConf.ERROR.Msg
@@ -163,7 +163,7 @@ func getListHandle(context *gin.Context) {
 				"Nickname":  user.Nickname,
 				"RoleType":  user.RoleType,
 				"LoginTime": user.LoginTime,
-			}, "json Unmarshal failed")
+			}, "json Unmarshal failed. error:%+v", err)
 			return
 		}
 		users = append(users, user)
@@ -189,7 +189,7 @@ func deleteHandle(context *gin.Context) {
 	if err := redis.DelData(userIdStr); err != nil {
 		log.Error(log.Field{
 			"useid": userIdStr,
-		}, "delete user failed!")
+		}, "delete user failed! error:%+v", err)
 
 		resp.Code = contextConf.ERROR.Code
 		resp.Message = contextConf.ERROR.Msg
