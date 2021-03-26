@@ -5,7 +5,7 @@ type ErrorCode struct {
 	Msg  string
 }
 
-func newcode(code int) *ErrorCode {
+func errorCode(code int) *ErrorCode {
 	return &ErrorCode{
 		Code: code,
 		Msg:  codes[code],
@@ -18,6 +18,6 @@ var codes = map[int]string{
 }
 
 var (
-	SUCCESS = newcode(0)
-	ERROR   = newcode(1)
+	SUCCESS = errorCode(0)
+	ERROR   = errorCode(1)
 )

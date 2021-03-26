@@ -1,0 +1,4 @@
+redisConfig:
+    Addr: "localhost:6379"
+    Password: ""
+    DB: 0

@@ -2,15 +2,15 @@ package models
 
 type User struct {
 	UserId    string `json:"user_id"`
-	NickName  string `json:"nickname"`
+	Nickname  string `json:"nickname"`
 	RoleType  uint32 `json:"role_type,string"`
 	LoginTime int64  `json:"login_time,string,omitempty"`
 }
 
 type UserList struct {
-	Total  int32    `json:"total" comment:"总记录数" example:"" validate:""`
-	PageNo int32    `json:"page_no" comment:"当前页码" example:"" validate:""`
-	Users  []User `json:"users" comment:"总记录数" example:"" validate:""`
+	Total  int32  `json:"total" comment:"总记录数" example:"" validate:""`
+	PageNo int32  `json:"page_no" comment:"当前页码" example:"" validate:""`
+	Users  []User `json:"users" comment:"总记录" example:"" validate:""`
 }
 
 type Response struct {

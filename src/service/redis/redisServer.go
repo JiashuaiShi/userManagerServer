@@ -3,30 +3,39 @@ package redis
 import (
 	"errors"
 	"github.com/go-redis/redis"
-	"log"
+	_ "gopkg.in/yaml.v2"
+	log "zego.com/userManageServer/src/logger"
+	"zego.com/userManageServer/src/models"
 )
 
-// 声明一个全局的Client变量
-var client *redis.Client
-var uidSet = "uidSet"
+var (
+	// 声明一个全局的Client变量
+	client *redis.Client
+	uidSet = "uidSet"
+)
 
-func InitRedis() (err error) {
-	return initClient()
+func InitRedis(conf models.RedisConfig) (err error) {
+	return initClient(conf)
 }
 
 // 根据redis配置初始化一个客户端
-func initClient() (err error) {
+func initClient(conf models.RedisConfig) (err error) {
 	client = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379", // redis地址
-		Password: "",               // redis密码，没有则留空
-		DB:       0,                // 默认数据库，默认是0
+		Addr:     conf.Addr,     // redis地址
+		Password: conf.Password, // redis密码，没有则留空
+		DB:       conf.DB,       // 默认数据库，默认是0
 	})
 
 	//通过 *redis.client.Ping() 来检查是否成功连接到了redis服务器
 	// Output: PONG <nil>
 	_, err = client.Ping().Result()
 	if err != nil {
-		log.Println("initClient failed")
+		log.Error(log.Field{
+			"address":  conf.Addr,
+			"password": conf.Password,
+			"DbNo.":    conf.DB,
+		},
+			"redis init failed!")
 	}
 	return
 }
@@ -42,17 +51,16 @@ func GetData(key string) (values []string, err error) {
 		`)
 
 	res, err := luaScript.Run(client, []string{key}).Result()
-	if err != nil {
-		log.Println("GetData luaScript failed")
+	if err != nil || res == nil {
+		log.Error(
+			log.Field{
+				"key": key,
+				"res": res,
+			},
+			"run GetData luaScript failed")
 		return
 	}
-	if res == nil {
-		log.Println("luaScript return false")
-		return
-	}
-
 	values = append(values, res.(string))
-
 	return values, err
 }
 
@@ -74,14 +82,19 @@ func SetData(key string, value string, score int64) (err error) {
 	`)
 	member := key
 	res, err := luaScript.Run(client, []string{uidSet, key}, score, member, value).Result()
-	if err != nil {
-		log.Println("GetData failed")
-	}
-	if res == nil {
-		log.Println("SetData luaScript return false")
+
+	// 先打印错误日志，然后返回error？还是错误只在一处打印就够了呢？
+	if err != nil || res == nil {
+		log.Error(log.Field{
+			"key":    key,
+			"score":  score,
+			"member": member,
+			"value":  value,
+			"res":    res,
+		}, "SetData luaScript return false")
 		err = errors.New("SetData luaScript return false")
 	}
-	return err
+	return nil
 }
 
 // 根据userId从redis读取全部数据
@@ -114,19 +127,15 @@ func GetAllData(minv int, maxv int) (values []string, total int32, err error) {
 	`)
 
 	result, err := luaScript.Run(client, []string{uidSet}, minv, maxv).Result()
-	if err != nil {
-		log.Fatal("GetData failed")
-		return
-	}
-
-	if result == nil {
-		log.Println("GetAllData luaScript return false")
-		err = errors.New("GetAllData luaScript return false")
+	if err != nil || result == nil{
+		log.Error(log.Field{
+			"minv": minv,
+			"maxv": maxv,
+		},"GetData failed")
 		return
 	}
 
 	res := result.([]interface{})
-
 	vals := res[1].([]interface{})
 	total = int32(res[0].(int64))
 
@@ -151,13 +160,13 @@ func DelData(key string) (err error) {
 		return false
 	`)
 	res, err := luaScript.Run(client, []string{uidSet, key}).Result()
-	if err != nil {
-		log.Println("DelData failed")
+	if err != nil || res == nil{
+		log.Error(log.Field{
+			"key":key,
+			"res": res,
+		},"DelData luaScript return false")
 		return
 	}
-	if res == nil {
-		log.Println("DelData luaScript return false")
-		err = errors.New("DelData luaScript return false")
-	}
+
 	return
 }

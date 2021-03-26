@@ -1,12 +1,12 @@
 package router
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"time"
-	"github.com/gin-contrib/cors"
 )
 
-func RunRouter()  {
+func RunRouter() {
 	router := gin.Default()
 
 	router.Use(
@@ -27,7 +27,3 @@ func RunRouter()  {
 
 	_ = router.Run(":9001")
 }
-
-
-
-
