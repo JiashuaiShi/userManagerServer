@@ -10,7 +10,7 @@ import (
 var router *gin.Engine
 
 func InitRouter() {
-	router := gin.Default()
+	router = gin.Default()
 
 	// Albert提供解决客户端跨域访问的解决方案
 	router.Use(
@@ -27,7 +27,8 @@ func InitRouter() {
 	routerGroup.POST("/add_user", addHandle)
 	routerGroup.GET("/get_user", getHandle)
 	routerGroup.POST("/get_userlist", getListHandle)
-	routerGroup.POST("/del_user/:id", deleteHandle)
+	//routerGroup.DELETE("/del_user/:id", deleteHandle)
+	routerGroup.POST("/del_user", deleteHandle)
 }
 
 // 指定端口号启动服务

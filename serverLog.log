@@ -1,16 +1,131 @@
-{"DbNo.":0,"address":"localhost:6379","level":"error","msg":"redis init failed. error: [dial tcp [::1]:6379: connect: connection refused]","password":"","time":"2021-03-27T14:07:25+08:00"}
-ist Start!","time":"2021-03-26T21:17:45+08:00"}
-{"level":"info","msg":"getUserList Start!","time":"2021-03-26T21:17:47+08:00"}
-{"level":"info","msg":"getuser start!","time":"2021-03-26T21:18:37+08:00"}
-{"level":"debug","msg":"redis raw data.[]","time":"2021-03-26T21:18:37+08:00","userInfo":["{\"user_id\":\"1\",\"nickname\":\"1\",\"role_type\":\"2\",\"login_time\":\"1616726008\"}"]}
-{"level":"info","msg":"getuser start!","time":"2021-03-26T22:12:18+08:00"}
-{"key":"","level":"error","msg":"run GetData luaScript failed, error:[redis: nil]","res":null,"time":"2021-03-26T22:12:18+08:00"}
-{"level":"error","msg":"get data from redis failed! error:[redis: nil]","time":"2021-03-26T22:12:18+08:00","userInfo":null}
-{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:38+08:00"}
-{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:41+08:00"}
-{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:43+08:00"}
-{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:46+08:00"}
-{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:49+08:00"}
-{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:49+08:00"}
-{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:51+08:00"}
-{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:54+08:00"}
+{"level":"info","msg":"log init success","time":"2021-03-27T17:57:12+08:00"}
+{"level":"info","msg":"initClient start!","time":"2021-03-27T17:57:12+08:00"}
+{"level":"info","msg":"redis init success","time":"2021-03-27T17:57:12+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T17:57:17+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T17:57:17+08:00"}
+{"level":"info","msg":"GetData success!","time":"2021-03-27T17:57:31+08:00"}
+{"level":"debug","msg":"redis raw data.[]","time":"2021-03-27T17:57:31+08:00","userInfo":"{\"user_id\":\"2\",\"nickname\":\"2\",\"role_type\":\"1\",\"login_time\":\"1616836647\"}","userid":"2"}
+{"level":"info","msg":"getUser Success!","time":"2021-03-27T17:57:31+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T17:57:39+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T17:57:39+08:00"}
+{"key":"","level":"error","msg":"run GetData luaScript failed, error:[redis: nil]","time":"2021-03-27T17:57:41+08:00"}
+{"level":"error","msg":"get data from redis failed! error:[redis: nil]","time":"2021-03-27T17:57:41+08:00","userid":""}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T17:57:44+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T17:57:44+08:00"}
+{"key":"","level":"error","msg":"run GetData luaScript failed, error:[redis: nil]","time":"2021-03-27T17:57:46+08:00"}
+{"level":"error","msg":"get data from redis failed! error:[redis: nil]","time":"2021-03-27T17:57:46+08:00","userid":""}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:05:56+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:05:56+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:06:57+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:06:57+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:07:08+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:07:08+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:07:13+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:07:13+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:07:15+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:07:15+08:00"}
+{"key":"1","level":"error","msg":"run GetData luaScript failed, error:[redis: nil]","time":"2021-03-27T18:07:32+08:00"}
+{"level":"error","msg":"get data from redis failed! error:[redis: nil]","time":"2021-03-27T18:07:32+08:00","userid":"1"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:07:53+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:07:53+08:00"}
+{"key":"1","level":"error","msg":"run GetData luaScript failed, error:[redis: nil]","time":"2021-03-27T18:07:55+08:00"}
+{"level":"error","msg":"get data from redis failed! error:[redis: nil]","time":"2021-03-27T18:07:55+08:00","userid":"1"}
+{"level":"info","msg":"GetData success!","time":"2021-03-27T18:08:00+08:00"}
+{"level":"debug","msg":"redis raw data.[]","time":"2021-03-27T18:08:00+08:00","userInfo":"{\"user_id\":\"2\",\"nickname\":\"2\",\"role_type\":\"1\",\"login_time\":\"1616836647\"}","userid":"2"}
+{"level":"info","msg":"getUser Success!","time":"2021-03-27T18:08:00+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:08:12+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:08:12+08:00"}
+{"LoginTime":1616839699,"Nickname":"5","RoleType":1,"UserId":"5","level":"debug","msg":"addUsr raw data[]","time":"2021-03-27T18:08:19+08:00"}
+{"level":"info","msg":"redis setData success!","time":"2021-03-27T18:08:19+08:00"}
+{"level":"info","msg":"adduser success!","time":"2021-03-27T18:08:19+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:08:19+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:08:19+08:00"}
+{"LoginTime":1616839704,"Nickname":"6","RoleType":1,"UserId":"6","level":"debug","msg":"addUsr raw data[]","time":"2021-03-27T18:08:24+08:00"}
+{"level":"info","msg":"redis setData success!","time":"2021-03-27T18:08:24+08:00"}
+{"level":"info","msg":"adduser success!","time":"2021-03-27T18:08:24+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:08:24+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:08:24+08:00"}
+{"LoginTime":1616839709,"Nickname":"7","RoleType":1,"UserId":"7","level":"debug","msg":"addUsr raw data[]","time":"2021-03-27T18:08:29+08:00"}
+{"level":"info","msg":"redis setData success!","time":"2021-03-27T18:08:29+08:00"}
+{"level":"info","msg":"adduser success!","time":"2021-03-27T18:08:29+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:08:29+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:08:29+08:00"}
+{"LoginTime":1616839713,"Nickname":"8","RoleType":1,"UserId":"8","level":"debug","msg":"addUsr raw data[]","time":"2021-03-27T18:08:33+08:00"}
+{"level":"info","msg":"redis setData success!","time":"2021-03-27T18:08:33+08:00"}
+{"level":"info","msg":"adduser success!","time":"2021-03-27T18:08:33+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:08:33+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:08:33+08:00"}
+{"LoginTime":1616839719,"Nickname":"9","RoleType":2,"UserId":"9","level":"debug","msg":"addUsr raw data[]","time":"2021-03-27T18:08:39+08:00"}
+{"level":"info","msg":"redis setData success!","time":"2021-03-27T18:08:39+08:00"}
+{"level":"info","msg":"adduser success!","time":"2021-03-27T18:08:39+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:08:39+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:08:39+08:00"}
+{"LoginTime":1616839724,"Nickname":"11","RoleType":2,"UserId":"11","level":"debug","msg":"addUsr raw data[]","time":"2021-03-27T18:08:44+08:00"}
+{"level":"info","msg":"redis setData success!","time":"2021-03-27T18:08:44+08:00"}
+{"level":"info","msg":"adduser success!","time":"2021-03-27T18:08:44+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:08:44+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:08:44+08:00"}
+{"LoginTime":1616839731,"Nickname":"12","RoleType":1,"UserId":"12","level":"debug","msg":"addUsr raw data[]","time":"2021-03-27T18:08:51+08:00"}
+{"level":"info","msg":"redis setData success!","time":"2021-03-27T18:08:51+08:00"}
+{"level":"info","msg":"adduser success!","time":"2021-03-27T18:08:51+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:08:51+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:08:51+08:00"}
+{"LoginTime":1616839742,"Nickname":"44","RoleType":2,"UserId":"44","level":"debug","msg":"addUsr raw data[]","time":"2021-03-27T18:09:02+08:00"}
+{"level":"info","msg":"redis setData success!","time":"2021-03-27T18:09:02+08:00"}
+{"level":"info","msg":"adduser success!","time":"2021-03-27T18:09:02+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:02+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:02+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:04+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:04+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:09+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:09+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:11+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:11+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:13+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:13+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:14+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:14+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:15+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:15+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:16+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:16+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:17+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:17+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:19+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:19+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:19+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:19+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:21+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:21+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:22+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:22+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:23+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:23+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:25+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:25+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:26+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:26+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:27+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:27+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:28+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:28+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:29+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:29+08:00"}
+{"level":"info","msg":"redis delData success!","time":"2021-03-27T18:09:34+08:00"}
+{"level":"info","msg":"deleteUser success","time":"2021-03-27T18:09:34+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:34+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:34+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:36+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:36+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:37+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:37+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:39+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:39+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:39+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:39+08:00"}
+{"level":"info","msg":"redis delData success!","time":"2021-03-27T18:09:41+08:00"}
+{"level":"info","msg":"deleteUser success","time":"2021-03-27T18:09:41+08:00"}
+{"level":"info","msg":"redis getDataList success!","time":"2021-03-27T18:09:41+08:00"}
+{"level":"info","msg":"getUserList success!","time":"2021-03-27T18:09:41+08:00"}
+{"key":"2","level":"error","msg":"run GetData luaScript failed, error:[redis: nil]","time":"2021-03-27T18:09:47+08:00"}
+{"level":"error","msg":"get data from redis failed! error:[redis: nil]","time":"2021-03-27T18:09:47+08:00","userid":"2"}

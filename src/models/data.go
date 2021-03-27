@@ -25,7 +25,7 @@ type Response struct {
 
 // http请求
 type Query struct {
-	UserId   string `json:"user_id"`  	//post请求使用userid，get/delete方法从url中获取userid
+	UserId   string `json:"user_id,omitempty"`  	//post请求使用userid，get/delete方法从url中获取userid
 	PageNo   int    `json:"page_no"`
 	PageSize int    `json:"page_size"`
 }
