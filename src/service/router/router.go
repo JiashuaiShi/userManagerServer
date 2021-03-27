@@ -26,8 +26,8 @@ func InitRouter() {
 	routerGroup := router.Group("/user")
 	routerGroup.POST("/add_user", addHandle)
 	routerGroup.GET("/get_user", getHandle)
-	routerGroup.GET("/get_userlist", getListHandle)
-	routerGroup.DELETE("/del_user/:id", deleteHandle)
+	routerGroup.POST("/get_userlist", getListHandle)
+	routerGroup.POST("/del_user/:id", deleteHandle)
 }
 
 // 指定端口号启动服务

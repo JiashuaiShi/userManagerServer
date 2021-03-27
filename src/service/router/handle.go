@@ -30,17 +30,17 @@ func addHandle(context *gin.Context) {
 	// 服务端填入登陆时间
 	user.LoginTime = time.Now().Unix()
 
-	// 解析成功后填入field
+	// 解析成功后填入Field，用于err情况输出
 	logFields["UserId"] = user.UserId
 	logFields["Nickname"] = user.Nickname
 	logFields["RoleType"] = user.RoleType
 	logFields["LoginTime"] = user.LoginTime
 
 	// 打印原始数据
-	log.Debug(logFields, "add usr raw data")
+	log.Debug(logFields, "addUsr raw data")
 
 	// 转成json格式准备填入redis
-	jsonData, err := json.Marshal(user)
+	userInfo, err := json.Marshal(user)
 	if err != nil {
 		// 返回错误响应
 		resp.Code = context_conf.ERROR.Code
@@ -50,8 +50,8 @@ func addHandle(context *gin.Context) {
 		return
 	}
 
-	// 保存到redis
-	if err := redis.SetData(user.UserId, string(jsonData), user.LoginTime); err != nil {
+	// 保存到redis， uid作为member， logintime作为score
+	if err := redis.SetData(user.UserId, string(userInfo), user.LoginTime); err != nil {
 		// 返回错误响应
 		resp.Code = context_conf.ERROR.Code
 		resp.Message = context_conf.ERROR.Msg
@@ -73,11 +73,11 @@ func getHandle(context *gin.Context) {
 	var resp models.Response
 	logFields := log.Field{}
 
-	// getuser接口定义，根据userid获取唯一的用户信息,使用http的get请求
+	// 使用http的get请求
 	userId := context.Query("user_id")
 	logFields["userid"] = userId
 
-	// 从redis查询ID的string格式的data
+	// 从redis查询userInfo
 	userInfo, err := redis.GetData(userId)
 	if err != nil {
 		// 返回错误响应
@@ -91,9 +91,11 @@ func getHandle(context *gin.Context) {
 	logFields["userInfo"] = userInfo
 	log.Debug(logFields, "redis raw data.")
 
-	// 查询单个用户是用get_user接口实现的，对应前端分页table的展示，返回一个只有一个元素的数组，展示单个用户结果
+	// 查询单个用户, 对应前端分页table的展示，所以返回一个只有一个元素的数组，展示单个用户结果
 	users := make([]models.User, 0)
 	user := models.User{}
+
+	// 把redis的记录反序列化为结构体，填回response
 	if err := json.Unmarshal([]byte(userInfo), &user); err != nil {
 		// 返回错误响应
 		resp.Code = context_conf.ERROR.Code
@@ -107,12 +109,13 @@ func getHandle(context *gin.Context) {
 	users = append(users, user)
 	resp.Code = context_conf.SUCCESS.Code
 	resp.Message = context_conf.SUCCESS.Msg
-	resp.Data = models.UserList{Total: 1, Users: users} // 单个用户查询，返回总个数1，userid为唯一值
+	// 单个用户userid查询，返回总个数1
+	resp.Data = models.UserList{Total: 1, Users: users}
 	context.JSON(http.StatusOK, &resp)
 	log.Info(nil, "getUser Success!")
 }
 
-// 查询用户列表：http://loclahost:8080/user/get_userlist
+// 查询用户列表：http://loclahost:8080/user/get_userlist ，
 // 使用http的post方法查询
 func getListHandle(context *gin.Context) {
 	var query models.Query
@@ -158,10 +161,11 @@ func getListHandle(context *gin.Context) {
 		return
 	}
 
-	// 把查询结果填回响应json数组
+	// 返回[]models.User
 	users := make([]models.User, 0)
 	for _, userInfo := range usersInfo {
 		user := models.User{}
+		// 把redis的记录反序列化为结构体，填回response
 		if err := json.Unmarshal([]byte(userInfo), &user); err != nil {
 			resp.Code = context_conf.ERROR.Code
 			resp.Message = context_conf.ERROR.Msg
@@ -184,14 +188,25 @@ func getListHandle(context *gin.Context) {
 // 删除用户：http://loclahost:8080/user/del_user/id
 // 使用http的post方法
 func deleteHandle(context *gin.Context) {
-	log.Info(nil, "delete user start")
-	userIdStr := context.Param("id")
 	var resp models.Response
-	if err := redis.DelData(userIdStr); err != nil {
-		log.Error(log.Field{
-			"useid": userIdStr,
-		}, "delete user failed! error:%+v", err)
+	var query models.Query
+	logField := log.Field{}
 
+	// 解析post中body内容
+	if err := context.BindJSON(&query); err != nil {
+		// 返回错误响应
+		resp.Code = context_conf.ERROR.Code
+		resp.Message = context_conf.ERROR.Msg
+		context.JSON(http.StatusOK, &resp)
+		log.Error(logField, "BindJSON failed, error:%+v", err)
+		return
+	}
+
+	//userId := context.Param("id")
+	userId := query.UserId
+	if err := redis.DelData(userId); err != nil {
+		logField["userId"] = userId
+		log.Error(logField, "delete user failed! error:%+v", err)
 		resp.Code = context_conf.ERROR.Code
 		resp.Message = context_conf.ERROR.Msg
 		return
@@ -199,6 +214,6 @@ func deleteHandle(context *gin.Context) {
 
 	resp.Code = context_conf.SUCCESS.Code
 	resp.Message = context_conf.SUCCESS.Msg
-
+	log.Info(nil, "deleteUser success")
 	context.JSON(http.StatusOK, &resp)
 }

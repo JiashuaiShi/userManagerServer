@@ -14,20 +14,22 @@ type Field = logrus.Fields
 // 初始化日志配置
 func Init(conf models.LogConfig) (err error) {
 	logger = logrus.New()
+
 	// 设置级别
 	logger.SetLevel(models.LogLevelMap[conf.Level])
+
 	// 设置格式
 	logger.SetFormatter(&logrus.JSONFormatter{})
+
 	// 设置路径
-	// path为空，则输出到控制台上
-	// path不为空，输出到对应路径文件
-	// path打开失败，则退出程序
 	var file *os.File
+	// path为空，输出到控制台上
 	if len(conf.Path) == 0 {
 		logger.SetOutput(os.Stdout)
 		fmt.Printf("log output stdout!")
 		return err
 	} else {
+		//path不为空，输出到对应路径文件
 		if file, err = os.OpenFile(conf.Path, os.O_CREATE|os.O_WRONLY, 0666); err != nil {
 			fmt.Printf("log file open failed! program cannnot continue!")
 			return err

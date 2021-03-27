@@ -4,6 +4,6 @@ redis_config:
     db: 0
 log_config:
     path: "./serverLog.log"
-    level: 1 #"DebugLevel"
+    level: 5 #"DebugLevel"
 router_config:
     port: ":9001"

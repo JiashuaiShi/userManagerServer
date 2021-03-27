@@ -29,20 +29,22 @@ func main() {
 		fmt.Printf("log init failed! error: %+v\n", err)
 		return
 	}
+
 	log.Info(nil, "log init success")
 
 	// 初始化数据库连接
 	redisConf := config.RedisConfig
-	logField := log.Field{
-		"address":  redisConf.Addr,
-		"password": redisConf.Password,
-		"db":       redisConf.Db,
-	}
 
 	if err := redis.InitRedis(redisConf); err != nil {
+		logField := log.Field{
+			"address":  redisConf.Addr,
+			"password": redisConf.Password,
+			"db":       redisConf.Db,
+		}
 		log.Error(logField, "redis init failed. error: %+v", err)
 		return
 	}
+
 	log.Info(nil, "redis init success")
 
 	// 启动gin服务

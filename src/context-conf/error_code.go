@@ -1,5 +1,6 @@
 package context_conf
 
+// code-message map
 var codes = map[int]string{
 	0: "success",
 	1: "error",
@@ -15,8 +16,8 @@ var (
 	ERROR   = errorCode(1)
 )
 
-func errorCode(code int) *ErrorCode {
-	return &ErrorCode{
+func errorCode(code int) ErrorCode {
+	return ErrorCode{
 		Code: code,
 		Msg:  codes[code],
 	}

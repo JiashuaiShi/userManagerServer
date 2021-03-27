@@ -46,18 +46,17 @@ func GetData(key string) (value string, err error) {
 		`)
 
 	res, err := luaScript.Run(client, []string{key}).Result()
-	logFile := log.Field{
-		"key": key,
-	}
 
 	// 存在err或者lua返回false
 	if err != nil || res == nil {
+		logFile := log.Field{
+			"key": key,
+		}
 		log.Error(logFile, "run GetData luaScript failed, error:%+v", err)
 		return
 	}
 
 	value = res.(string)
-	//logFile["value"] = value
 	log.Info(nil, "GetData success!")
 
 	return value, err
@@ -65,12 +64,6 @@ func GetData(key string) (value string, err error) {
 
 // 根据userId向redis设置数据
 func SetData(key string, value string, score int64) (err error) {
-	logFile := log.Field{
-		"key":   key,
-		"value": value,
-		"score": score,
-	}
-
 	var luaScript = redis.NewScript(`
 		local zset =   KEYS[1] -- 有序集合
 		local score =  ARGV[1] -- loginTime
@@ -93,6 +86,11 @@ func SetData(key string, value string, score int64) (err error) {
 
 	// 存在err或者lua返回false
 	if err != nil || res == nil {
+		logFile := log.Field{
+			"key":   key,
+			"value": value,
+			"score": score,
+		}
 		log.Error(logFile, "SetData luaScript return false. error: %+v", err)
 		return err
 	}
@@ -186,7 +184,6 @@ func DelData(key string) (err error) {
 			"key": key,
 			"res": res,
 		}
-
 		log.Error(logField, "DelData luaScript return false, error:%+v", err)
 		return
 	}

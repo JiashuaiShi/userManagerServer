@@ -25,8 +25,7 @@ type Response struct {
 
 // http请求
 type Query struct {
-	//psot请求不使用userid，get方法从url中获取userid
-	//UserId   string `json:"user_id"`
+	UserId   string `json:"user_id"`  	//post请求使用userid，get/delete方法从url中获取userid
 	PageNo   int    `json:"page_no"`
 	PageSize int    `json:"page_size"`
 }
@@ -59,8 +58,7 @@ type RouterConfig struct {
 // log_Level字典
 var LogLevelMap map[int]log.Level
 
-// 日志打印级别字典
-// 根据Albert要求，使用int-Level的映射关系
+// 日志打印级别字典，根据Albert要求，使用int-Level的映射关系
 func init() {
 	LogLevelMap = make(map[int]log.Level)
 	LogLevelMap[5] = log.DebugLevel //DebugLevel
