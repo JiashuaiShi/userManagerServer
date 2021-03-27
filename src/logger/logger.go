@@ -1,15 +1,7 @@
-/**
- * @Author: ryder
- * @Description:
- * @File: log
- * @Version: 1.0.0
- * @Date: 2021/3/24 10:00 下午
- */
-
 package logger
 
 import (
-	"errors"
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"os"
 	"zego.com/userManageServer/src/models"
@@ -19,6 +11,7 @@ var logger *logrus.Logger
 
 type Field = logrus.Fields
 
+// 初始化日志配置
 func Init(conf models.LogConfig) (err error) {
 	logger = logrus.New()
 	// 设置级别
@@ -26,16 +19,30 @@ func Init(conf models.LogConfig) (err error) {
 	// 设置格式
 	logger.SetFormatter(&logrus.JSONFormatter{})
 	// 设置路径
-	if len(conf.Path) == 0{
+	// path为空，则输出到控制台上
+	// path不为空，输出到对应路径文件
+	// path打开失败，则退出程序
+	var file *os.File
+	if len(conf.Path) == 0 {
 		logger.SetOutput(os.Stdout)
+		fmt.Printf("log output stdout!")
 		return err
-	}else {
-		if file, err := os.OpenFile(conf.Path, os.O_CREATE|os.O_WRONLY, 0666); err == nil {
-			logger.Out = file
+	} else {
+		if file, err = os.OpenFile(conf.Path, os.O_CREATE|os.O_WRONLY, 0666); err != nil {
+			fmt.Printf("log file open failed! program cannnot continue!")
 			return err
-		} else {
-			return errors.New("log conf failed")
 		}
+		logger.Out = file
+	}
+
+	return err
+}
+
+func Debug(fields logrus.Fields, msg string, args ...interface{}) {
+	if fields != nil {
+		logger.WithFields(fields).Debug(msg, args)
+	} else {
+		logger.Debugf(msg, args...)
 	}
 }
 
@@ -52,13 +59,5 @@ func Error(fields Field, msg string, args ...interface{}) {
 		logger.WithFields(fields).Errorf(msg, args)
 	} else {
 		logger.Errorf(msg)
-	}
-}
-
-func Debug(fields logrus.Fields, msg string, args ...interface{}) {
-	if fields != nil {
-		logger.WithFields(fields).Debug(msg, args)
-	} else {
-		logger.Debugf(msg, args...)
 	}
 }

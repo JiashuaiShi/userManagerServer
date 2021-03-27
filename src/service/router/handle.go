@@ -4,184 +4,185 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
 	"time"
-	"zego.com/userManageServer/src/contextConf"
+	"zego.com/userManageServer/src/context-conf"
 	log "zego.com/userManageServer/src/logger"
 	"zego.com/userManageServer/src/models"
 	"zego.com/userManageServer/src/service/redis"
 )
 
-// 增加用户：http://loclahost:8080/service/add_user
+// 增加用户：http://loclahost:8080/user/add_user
 func addHandle(context *gin.Context) {
-	log.Info(nil, "add user start")
-
-	// 从context填入user信息
 	var user models.User
+	var resp models.Response
+	logFields := log.Field{}
+
+	// 解析post中body内容
 	if err := context.BindJSON(&user); err != nil {
-		log.Error(log.Field{
-			"UserId":    user.UserId,
-			"Nickname":  user.Nickname,
-			"RoleType":  user.RoleType,
-			"LoginTime": user.LoginTime,
-		}, "BindJSON failed, error:%+v", err)
+		// 返回错误响应
+		resp.Code = context_conf.ERROR.Code
+		resp.Message = context_conf.ERROR.Msg
+		context.JSON(http.StatusOK, &resp)
+		log.Error(logFields, "BindJSON failed, error:%+v", err)
 		return
 	}
 
-	// 更新登录时间
+	// 服务端填入登陆时间
 	user.LoginTime = time.Now().Unix()
 
-	// 打印原始数据
-	log.Debug(log.Field{
-		"user_id:":    user.UserId,
-		"nickname:":   user.Nickname,
-		"role_type:":  user.RoleType,
-		"login_time:": user.LoginTime},
-		"add usr raw data")
+	// 解析成功后填入field
+	logFields["UserId"] = user.UserId
+	logFields["Nickname"] = user.Nickname
+	logFields["RoleType"] = user.RoleType
+	logFields["LoginTime"] = user.LoginTime
 
-	// 获取user_id 和 string类型的data
+	// 打印原始数据
+	log.Debug(logFields, "add usr raw data")
+
+	// 转成json格式准备填入redis
 	jsonData, err := json.Marshal(user)
 	if err != nil {
-		log.Error(log.Field{
-			"UserId":    user.UserId,
-			"Nickname":  user.Nickname,
-			"RoleType":  user.RoleType,
-			"LoginTime": user.LoginTime,
-		},
-			"json marshal failed! error%+v:", err)
+		// 返回错误响应
+		resp.Code = context_conf.ERROR.Code
+		resp.Message = context_conf.ERROR.Msg
+		context.JSON(http.StatusOK, &resp)
+		log.Error(logFields, "json marshal failed! error%+v:", err)
 		return
 	}
-	log.Debug(log.Field{
-		"UserId":    user.UserId,
-		"Nickname":  user.Nickname,
-		"RoleType":  user.RoleType,
-		"LoginTime": user.LoginTime,
-	},
-		"redis存储信息")
-
-	var resp models.Response
 
 	// 保存到redis
 	if err := redis.SetData(user.UserId, string(jsonData), user.LoginTime); err != nil {
-		resp.Code = contextConf.ERROR.Code
-		resp.Message = contextConf.ERROR.Msg
+		// 返回错误响应
+		resp.Code = context_conf.ERROR.Code
+		resp.Message = context_conf.ERROR.Msg
+		context.JSON(http.StatusOK, &resp)
 		log.Error(nil, "redis save data failed!, error:%+v", err)
-	} else {
-		resp.Code = contextConf.SUCCESS.Code
-		resp.Message = contextConf.SUCCESS.Msg
+		return
 	}
 
+	// 返回添加成功响应
+	resp.Code = context_conf.SUCCESS.Code
+	resp.Message = context_conf.SUCCESS.Msg
 	context.JSON(http.StatusOK, &resp)
+	log.Info(nil, "adduser success!")
+	return
 }
 
-// 查询用户：http://loclahost:8080/service/get_user？name=1413
+// 查询用户：http://loclahost:8080/user/get_user？name=ryder
 func getHandle(context *gin.Context) {
-	log.Info(nil, "getuser start!")
+	var resp models.Response
+	logFields := log.Field{}
 
-	// 获取用户ID
-	userId := context.Query("query")
+	// getuser接口定义，根据userid获取唯一的用户信息,使用http的get请求
+	userId := context.Query("user_id")
+	logFields["userid"] = userId
 
 	// 从redis查询ID的string格式的data
-	var resp models.Response
-	userStr, err := redis.GetData(userId)
+	userInfo, err := redis.GetData(userId)
 	if err != nil {
-		log.Error(log.Field{
-			"userInfo": userStr,
-		},
-			"get data from redis failed! error:%+v", err)
-		resp.Code = contextConf.ERROR.Code
-		resp.Message = contextConf.ERROR.Msg
+		// 返回错误响应
+		log.Error(logFields, "get data from redis failed! error:%+v", err)
+		resp.Code = context_conf.ERROR.Code
+		resp.Message = context_conf.ERROR.Msg
+		context.JSON(http.StatusOK, &resp)
 		return
 	}
 
-	log.Debug(log.Field{
-		"userInfo": userStr,
-	},
-		"redis raw data.")
+	logFields["userInfo"] = userInfo
+	log.Debug(logFields, "redis raw data.")
 
+	// 查询单个用户是用get_user接口实现的，对应前端分页table的展示，返回一个只有一个元素的数组，展示单个用户结果
 	users := make([]models.User, 0)
-
-	for _, userStr := range userStr {
-		user := models.User{}
-		if err := json.Unmarshal([]byte(userStr), &user); err != nil {
-			log.Error(log.Field{
-				"UserId":    user.UserId,
-				"Nickname":  user.Nickname,
-				"RoleType":  user.RoleType,
-				"LoginTime": user.LoginTime,
-			},
-				"json unmarshal failed. error:%+v", err)
-		}
-		users = append(users, user)
+	user := models.User{}
+	if err := json.Unmarshal([]byte(userInfo), &user); err != nil {
+		// 返回错误响应
+		resp.Code = context_conf.ERROR.Code
+		resp.Message = context_conf.ERROR.Msg
+		context.JSON(http.StatusOK, &resp)
+		log.Error(logFields, "json convert failed!, error:%+v", err)
+		return
 	}
 
-	resp = models.Response{
-		Code:    contextConf.SUCCESS.Code,
-		Message: contextConf.SUCCESS.Msg,
-		Data: models.UserList{
-			Total:  1,
-			PageNo: 1,
-			Users:  users,
-		},
-	}
+	// 查询成功返回
+	users = append(users, user)
+	resp.Code = context_conf.SUCCESS.Code
+	resp.Message = context_conf.SUCCESS.Msg
+	resp.Data = models.UserList{Total: 1, Users: users} // 单个用户查询，返回总个数1，userid为唯一值
 	context.JSON(http.StatusOK, &resp)
+	log.Info(nil, "getUser Success!")
 }
 
-// 查询用户列表：http://loclahost:8080/service/get_userlist
+// 查询用户列表：http://loclahost:8080/user/get_userlist
+// 使用http的post方法查询
 func getListHandle(context *gin.Context) {
-	log.Info(nil, "getUserList Start!")
-
-	pageNoStr := context.Query("page_no")
-	pageSizeStr := context.Query("page_size")
-
-	pageNo, _ := strconv.Atoi(pageNoStr)
-	pageSize, _ := strconv.Atoi(pageSizeStr)
-
-	minVal := (pageNo - 1) * pageSize
-	maxVal := minVal + pageSize - 1
-
+	var query models.Query
 	var resp models.Response
-	usersStr, total, err := redis.GetAllData(minVal, maxVal)
+	logFields := log.Field{}
 
-	if err != nil {
-		log.Error(log.Field{
-			"rawData": usersStr,
-		}, "redis return failed. error:%+v", err)
-
-		resp.Code = contextConf.ERROR.Code
-		resp.Message = contextConf.ERROR.Msg
+	// 解析post中body内容
+	if err := context.BindJSON(&query); err != nil {
+		// 返回错误响应
+		resp.Code = context_conf.ERROR.Code
+		resp.Message = context_conf.ERROR.Msg
+		context.JSON(http.StatusOK, &resp)
+		log.Error(logFields, "BindJSON failed, error:%+v", err)
 		return
 	}
 
-	users := make([]models.User, 0)
+	pageNo := query.PageNo
+	pageSize := query.PageSize
+	logFields["pageNo"] = pageNo
+	logFields["pageSize"] = pageNo
 
-	for _, userStr := range usersStr {
+	// 设置单次请求的容量最大为50，配置在代码中
+	if pageSize > 50 {
+		// 返回错误响应, 暂时只配置成功和失败两种响应
+		resp.Code = context_conf.ERROR.Code
+		resp.Message = context_conf.ERROR.Msg
+		context.JSON(http.StatusOK, &resp)
+		log.Error(logFields, "getUserList failed! pageSize is over 50!")
+		return
+	}
+
+	// redis中ZSET的查询起止序号
+	start := (pageNo - 1) * pageSize
+	stop := start + pageSize - 1
+	usersInfo, total, err := redis.GetDataList(start, stop)
+
+	// redis查询失败响应
+	if err != nil {
+		resp.Code = context_conf.ERROR.Code
+		resp.Message = context_conf.ERROR.Msg
+		context.JSON(http.StatusOK, &resp)
+		log.Error(logFields, "redis return failed. error:%+v", err)
+		return
+	}
+
+	// 把查询结果填回响应json数组
+	users := make([]models.User, 0)
+	for _, userInfo := range usersInfo {
 		user := models.User{}
-		if err := json.Unmarshal([]byte(userStr), &user); err != nil {
-			log.Error(log.Field{
-				"UserId":    user.UserId,
-				"Nickname":  user.Nickname,
-				"RoleType":  user.RoleType,
-				"LoginTime": user.LoginTime,
-			}, "json Unmarshal failed. error:%+v", err)
+		if err := json.Unmarshal([]byte(userInfo), &user); err != nil {
+			resp.Code = context_conf.ERROR.Code
+			resp.Message = context_conf.ERROR.Msg
+			context.JSON(http.StatusOK, &resp)
+			log.Error(nil, "json Unmarshal failed. error:%+v", err)
 			return
 		}
 		users = append(users, user)
 	}
 
-	resp = models.Response{
-		Code:    contextConf.SUCCESS.Code,
-		Message: contextConf.SUCCESS.Msg,
-		Data: models.UserList{
-			Total:  total,
-			PageNo: int32(pageNo),
-			Users:  users,
-		},
-	}
+	// 查询成功
+	userList := models.UserList{Total: total, Users: users}
+	resp.Data = userList
+	resp.Code = context_conf.SUCCESS.Code
+	resp.Message = context_conf.SUCCESS.Msg
 	context.JSON(http.StatusOK, &resp)
+	log.Info(nil, "getUserList success!")
 }
 
-// 删除用户：http://loclahost:8080/service/del_user/id
+// 删除用户：http://loclahost:8080/user/del_user/id
+// 使用http的post方法
 func deleteHandle(context *gin.Context) {
 	log.Info(nil, "delete user start")
 	userIdStr := context.Param("id")
@@ -191,13 +192,13 @@ func deleteHandle(context *gin.Context) {
 			"useid": userIdStr,
 		}, "delete user failed! error:%+v", err)
 
-		resp.Code = contextConf.ERROR.Code
-		resp.Message = contextConf.ERROR.Msg
+		resp.Code = context_conf.ERROR.Code
+		resp.Message = context_conf.ERROR.Msg
 		return
 	}
 
-	resp.Code = contextConf.SUCCESS.Code
-	resp.Message = contextConf.SUCCESS.Msg
+	resp.Code = context_conf.SUCCESS.Code
+	resp.Message = context_conf.SUCCESS.Msg
 
 	context.JSON(http.StatusOK, &resp)
 }

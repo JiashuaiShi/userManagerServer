@@ -2,7 +2,7 @@ package models
 
 import log "github.com/sirupsen/logrus"
 
-// http接口
+// userinfo定义
 type User struct {
 	UserId    string `json:"user_id"`
 	Nickname  string `json:"nickname"`
@@ -10,13 +10,13 @@ type User struct {
 	LoginTime int64  `json:"login_time,string,omitempty"`
 }
 
+// get_userlist接口定义
 type UserList struct {
-	Total  int32  `json:"total" comment:"总记录数" example:"" validate:""`
-	PageNo int32  `json:"page_no" comment:"当前页码" example:"" validate:""`
-	Users  []User `json:"users" comment:"总记录" example:"" validate:""`
+	Total int32  `json:"total" comment:"userinfo数组长度"`
+	Users []User `json:"users" comment:"userinfo数组内容"`
 }
 
-// http响应
+// Response响应
 type Response struct {
 	Code    int         `json:"code"`
 	Message string      `json:"message"`
@@ -24,20 +24,18 @@ type Response struct {
 }
 
 // http请求
-type QuerySingle struct {
-	UserId string `json:"user_id"`
-}
-
-type QueryList struct {
+type Query struct {
+	//psot请求不使用userid，get方法从url中获取userid
+	//UserId   string `json:"user_id"`
 	PageNo   int    `json:"page_no"`
 	PageSize int    `json:"page_size"`
-	Query    string `json:"query"`
 }
 
-// 配置结构
+// 全部配置信息
 type Config struct {
-	RedisConfig RedisConfig `yaml:"redis_config"`
-	LogConfig   LogConfig   `yaml:"log_config"`
+	RedisConfig  RedisConfig  `yaml:"redis_config"`
+	LogConfig    LogConfig    `yaml:"log_config"`
+	RouterConfig RouterConfig `yaml:"router_config"`
 }
 
 // redis配置
@@ -50,16 +48,24 @@ type RedisConfig struct {
 // log配置
 type LogConfig struct {
 	Path  string `yaml:"path"`
-	Level string `yaml:"level"`
+	Level int    `yaml:"level"`
 }
 
-// log Level字典
-var LogLevelMap map[string]log.Level
+// 启动端口配置
+type RouterConfig struct {
+	Port string `yaml:"port"`
+}
 
+// log_Level字典
+var LogLevelMap map[int]log.Level
+
+// 日志打印级别字典
+// 根据Albert要求，使用int-Level的映射关系
 func init() {
-	LogLevelMap = make(map[string]log.Level)
-	LogLevelMap["DebugLevel"] = log.DebugLevel
-	LogLevelMap["InfoLevel"] = log.InfoLevel
-	LogLevelMap["WarnLevel"] = log.WarnLevel
-	LogLevelMap["ErrorLevel"] = log.ErrorLevel
+	LogLevelMap = make(map[int]log.Level)
+	LogLevelMap[5] = log.DebugLevel //DebugLevel
+	LogLevelMap[4] = log.InfoLevel  // InfoLevel
+	LogLevelMap[3] = log.WarnLevel  // WarnLevel
+	LogLevelMap[2] = log.ErrorLevel // ErrorLevel
+	LogLevelMap[1] = log.FatalLevel // ErrorLevel
 }

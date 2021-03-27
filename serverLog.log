@@ -1,1 +1,16 @@
-{"DbNo.":0,"address":"localhost:6379","level":"error","msg":"redis init failed. error: [dial tcp [::1]:6379: connect: connection refused]","password":"","time":"2021-03-26T18:49:09+08:00"}
+{"DbNo.":0,"address":"localhost:6379","level":"error","msg":"redis init failed. error: [dial tcp [::1]:6379: connect: connection refused]","password":"","time":"2021-03-27T14:07:25+08:00"}
+ist Start!","time":"2021-03-26T21:17:45+08:00"}
+{"level":"info","msg":"getUserList Start!","time":"2021-03-26T21:17:47+08:00"}
+{"level":"info","msg":"getuser start!","time":"2021-03-26T21:18:37+08:00"}
+{"level":"debug","msg":"redis raw data.[]","time":"2021-03-26T21:18:37+08:00","userInfo":["{\"user_id\":\"1\",\"nickname\":\"1\",\"role_type\":\"2\",\"login_time\":\"1616726008\"}"]}
+{"level":"info","msg":"getuser start!","time":"2021-03-26T22:12:18+08:00"}
+{"key":"","level":"error","msg":"run GetData luaScript failed, error:[redis: nil]","res":null,"time":"2021-03-26T22:12:18+08:00"}
+{"level":"error","msg":"get data from redis failed! error:[redis: nil]","time":"2021-03-26T22:12:18+08:00","userInfo":null}
+{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:38+08:00"}
+{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:41+08:00"}
+{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:43+08:00"}
+{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:46+08:00"}
+{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:49+08:00"}
+{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:49+08:00"}
+{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:51+08:00"}
+{"level":"info","msg":"getUserList Start!","time":"2021-03-26T22:12:54+08:00"}
